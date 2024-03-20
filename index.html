@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Madimi+One&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./style.css">
+
+</head>
+<body style="background-image: url(https://img.freepik.com/free-vector/digital-earth-banner-with-glowing-lights-technology-background_1017-34374.jpg?t=st=1710826864~exp=1710830464~hmac=b87790c638840ed4df36c0069cddba94bc2028599c5bcb37958ab84d38bc125f&w=1060);
+             background-repeat: no-repeat; background-size: cover; overflow: hidden; height: 100vh;">
+
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <h1 class="text-light mt-4 text-center" style="font-family: Madimi One, sans-serif;">Search Country <i class="fa-solid fa-earth-americas fa-beat"></i></h1>
+            <div class="d-flex mt-4 justify-content-center">
+                <input type="text" class="form-control w-50" placeholder="Enter the Country Name" id="country">
+                <button type="button" class="btn ms-3 bg-light" onclick="search()"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            <div class="mt-2" id="displayRes">
+                
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+
+    </div>    
+</body>
+<script>
+    const search = async() =>{
+        console.log("Inside Search Function");
+        let cname = country.value;
+        // console.log(cname);
+
+        if (cname) {
+           const response = await fetch(`https://restcountries.com/v3.1/name/${cname}?fullText=true`)
+        //    console.log(response);
+           response.json().then((data)=>{
+            console.log(data[0]);
+
+            //flag
+            let flag = data[0].flags.png
+            
+            // common name
+            let com = data[0].name.common
+            console.log(com);
+
+            // official name
+            let offi = data[0].name.official
+            console.log(offi);
+
+            // capital
+            let capital = data[0].capital[0]
+            console.log(capital);
+
+            //continents
+            let continent = data[0].continents
+            console.log(continent);
+
+            //timezone
+            let timezone = data[0].timezones
+            console.log(timezone);
+
+            //area
+            let area = data[0].area
+            console.log(area);
+
+            //border countries
+            let bord = data[0].borders
+            console.log(bord);
+
+            //languages
+            // let lang = data[0].languages
+            // console.log(lang);
+            language = []
+            for (let lang in data[0].languages) {
+                language.push(data[0].languages[lang])
+            }
+            console.log(language);
+
+            //currency
+            // let currency = data[0].currencies
+            // console.log(currency);
+            currency = []
+            for(let cur in data[0].currencies){
+                var currencyName = data[0].currencies[cur].name
+                var currencySymbol = data[0].currencies[cur].symbol
+                // console.log(currSymb,currName);
+                currency.push(currencyName)
+                currency.push(currencySymbol)
+            }
+            console.log(currency);
+            
+            //population
+            let population = data[0].population
+            console.log(population);
+
+            //google map
+            let google = data[0].maps.googleMaps
+            console.log(google);
+
+            //street map
+            let street = data[0].maps.openStreetMaps
+            console.log(street);
+
+
+            displayRes.innerHTML = `<div class="card mb-2 p-4 bg-transparent border-0" style="max-width: 100%;">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <img src="${flag}" class="img-fluid rounded" alt="...">
+                        <h5 class="card-title mt-4 p-3 text-light">${offi}</h5>
+                        <ul class="list-group">
+                            <li class="list-group-item bg-transparent">Name : ${com}</li>
+                            <li class="list-group-item bg-transparent">Capital : ${capital}</li>
+                          </ul>
+                      </div>
+                      <div class="col-md-8" id="list">
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <li class="list-group-item bg-transparent">Continent : ${continent}</li>
+                                <li class="list-group-item bg-transparent">TimeZone : ${timezone}</li>
+                                <li class="list-group-item bg-transparent">Area : ${area}</li>
+                                <li class="list-group-item bg-transparent">Border Countries : ${bord}</li>
+                                <li class="list-group-item bg-transparent">Languages : ${language}</li>
+                                <li class="list-group-item bg-transparent">Currency : ${currency} </li>
+                                <li class="list-group-item bg-transparent">Population : ${population}</li>
+                                <li class="list-group-item bg-transparent">Google Map : <a href="${google}" target="_blank">${street}</a></li>
+                                <li class="list-group-item bg-transparent">Street Map : <a href="${street}">${street}</a> </li>
+                              </ul>
+                         
+                        </div>
+                      </div>
+                    </div>
+                  </div>`
+
+           })        
+
+        } else {
+            alert('Please enter a Country Name!')
+        }
+    }
+</script>
+</html>
